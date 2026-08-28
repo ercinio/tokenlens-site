@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TokenLens — AI agents in the notch</title>
+<meta name="description" content="Monitor, approve, and jump back to every AI coding session from your Mac's notch — and see your whole AI bill in one place. Local, no account, no telemetry. $15 pre-sale.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Silkscreen:wght@400;700&display=swap">
+<style>
+:root{
+  --bg:#0a0b10; --bg2:#0e1017; --panel:#13151e; --line:#20232f; --line2:#2b2f3f;
+  --ink:#ececf3; --dim:#9498ad; --faint:#5c6076;
+  --acc:#a855f7; --acc2:#c084fc; --live:#10b981; --warn:#f59e0b; --pink:#ec4899;
+  --maxw:1120px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Instrument Sans",system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(1200px 600px at 50% -200px, rgba(168,85,247,.14), transparent 70%);}
+a{color:inherit}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.eyebrow{font-family:"Silkscreen",monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:var(--acc2)}
+.mono{font-family:"JetBrains Mono",monospace}
+h1,h2,h3{font-family:"Chakra Petch",sans-serif;font-weight:700;letter-spacing:-.01em;line-height:1.1;margin:0}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:"Chakra Petch",sans-serif;font-weight:600;
+  font-size:15px;padding:12px 20px;border-radius:12px;border:1px solid transparent;cursor:pointer;text-decoration:none;transition:transform .12s, background .12s, border-color .12s}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--acc);color:#0a0b10}
+.btn-primary:hover{background:var(--acc2)}
+.btn-ghost{background:transparent;border-color:var(--line2);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--acc)}
+
+/* ── Nav ── */
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(12px);background:rgba(10,11,16,.72);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;gap:20px;height:60px}
+.brand{display:flex;align-items:center;gap:9px;font-family:"Chakra Petch";font-weight:700;font-size:17px;letter-spacing:.02em}
+.brand .dot{width:22px;height:22px;border-radius:6px;background:linear-gradient(135deg,var(--acc),var(--pink));display:grid;place-items:center;font-family:"Silkscreen";font-size:11px;color:#0a0b10}
+.nav-links{display:flex;gap:22px;margin-left:auto;font-size:14px;color:var(--dim)}
+.nav-links a:hover{color:var(--ink)}
+@media(max-width:720px){.nav-links{display:none}}
+
+/* ── Hero ── */
+.hero{text-align:center;padding:72px 0 40px}
+.hero h1{font-size:clamp(34px,6vw,60px);text-wrap:balance}
+.hero .accentword{color:var(--acc2)}
+.hero p.sub{max-width:60ch;margin:18px auto 0;color:var(--dim);font-size:clamp(16px,2.2vw,19px)}
+.cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.trust{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:18px;font-size:12.5px;color:var(--faint)}
+.trust b{color:var(--dim);font-weight:500}
+.price-flag{display:inline-flex;align-items:center;gap:8px;margin-top:22px;font-family:"JetBrains Mono";font-size:13px;
+  color:var(--live);border:1px solid rgba(16,185,129,.3);background:rgba(16,185,129,.08);padding:6px 12px;border-radius:999px}
+
+/* ── Island stage ── */
+.stage{margin:44px auto 0;max-width:640px;position:relative;padding:26px;border-radius:24px;
+  background:radial-gradient(600px 300px at 50% 0, rgba(168,85,247,.10), transparent), var(--bg2);
+  border:1px solid var(--line)}
+.style-pills{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.pill{font-family:"JetBrains Mono";font-size:11.5px;padding:6px 12px;border-radius:999px;border:1px solid var(--line2);
+  color:var(--dim);background:transparent;cursor:pointer;transition:.12s}
+.pill:hover{color:var(--ink)}
+.pill.on{color:#0a0b10;background:var(--acc);border-color:var(--acc)}
+.style-note{margin-top:10px;font-size:12px;color:var(--faint)}
+
+/* island mock (token-driven, mirrors the app) */
+.isl{width:380px;max-width:100%;margin:0 auto;background:var(--i-bg);color:var(--i-fg);border-radius:var(--i-r,18px);
+  padding:10px 12px;font-size:11px;border:1px solid var(--i-line);box-shadow:0 30px 60px rgba(0,0,0,.5);transition:background .3s, color .3s, border-color .3s}
+.isl *{box-sizing:border-box}
+.isl .top{display:flex;justify-content:space-between;align-items:center;padding:2px 4px 8px;
+  font-family:var(--i-disp);font-size:9px;letter-spacing:.14em;color:var(--i-mute);text-transform:uppercase}
+.isl .tabs{display:flex;gap:4px;padding-bottom:8px;font-family:var(--i-disp);font-size:8px;letter-spacing:.06em;text-transform:uppercase}
+.isl .tabs span{padding:5px 8px;border-radius:var(--i-rs,6px);color:var(--i-mute)}
+.isl .tabs span.on{color:var(--i-fg);background:var(--i-card)}
+.isl .ban{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:7px 9px;margin-bottom:8px;
+  border-radius:var(--i-rs,6px);background:var(--i-ban);border:1px solid var(--i-banline)}
+.isl .ban b{font-family:var(--i-disp);font-size:8px;letter-spacing:.08em;color:var(--i-warn);margin-right:6px;text-transform:uppercase}
+.isl .ban code{font-family:var(--i-mono);font-size:10px;color:var(--i-fg)}
+.isl .bt{display:flex;gap:4px}
+.isl .bt button{font-family:var(--i-disp);font-size:8px;letter-spacing:.05em;padding:4px 8px;border-radius:var(--i-rs,6px);border:1px solid transparent;text-transform:uppercase;cursor:default}
+.isl .ok{background:var(--i-ok);color:var(--i-onok,#000)}
+.isl .no{background:transparent;color:var(--i-fg);border-color:var(--i-line)!important}
+.isl .card{background:var(--i-card);border:1px solid var(--i-line);border-radius:var(--i-rs,8px);padding:9px 10px;margin-bottom:8px}
+.isl .lbl{display:flex;justify-content:space-between;font-family:var(--i-disp);font-size:8px;letter-spacing:.1em;color:var(--i-mute);text-transform:uppercase}
+.isl .lbl i{font-style:normal;color:var(--i-acc)}
+.isl .meter{height:6px;background:var(--i-line);border-radius:99px;margin:5px 0 7px;overflow:hidden}
+.isl .meter b{display:block;height:100%;background:var(--i-acc);border-radius:99px}
+.isl .meter.w b{background:var(--i-warn)}
+.isl .row{display:flex;justify-content:space-between;font-family:var(--i-mono);font-size:9px;color:var(--i-mute)}
+.isl .sh{display:flex;align-items:center;gap:6px;margin-bottom:6px;font-family:var(--i-disp);font-size:8px;letter-spacing:.06em;text-transform:uppercase}
+.isl .sh .d{width:7px;height:7px;border-radius:99px;background:var(--i-ok);animation:blink 1.1s steps(2) infinite}
+.isl .sh .pj{color:var(--i-ok)}
+.isl .sh .chip{margin-left:2px;font-size:7px;padding:2px 5px;border-radius:99px;background:var(--i-ok);color:var(--i-onok,#000)}
+.isl .sh .md{margin-left:auto;color:var(--i-acc)}
+.isl .task{font-size:11px;line-height:1.4;margin-bottom:6px;color:var(--i-fg)}
+.isl .log{font-family:var(--i-mono);font-size:9px;color:var(--i-mute);line-height:1.5}
+.isl .log em{font-style:normal;color:var(--i-cyan,var(--i-acc));margin-right:5px;font-family:var(--i-disp);font-size:7px;text-transform:uppercase}
+.isl .ft{display:flex;gap:9px;margin-top:7px;font-family:var(--i-mono);font-size:9px;color:var(--i-mute)}
+.isl .ft .live{margin-left:auto;color:var(--i-ok);font-family:var(--i-disp);letter-spacing:.08em;text-transform:uppercase}
+.isl .dots{display:flex;gap:5px;justify-content:center;padding-top:5px}
+.isl .dots i{width:5px;height:5px;border-radius:99px;background:var(--i-line)}
+.isl .dots i.on{width:7px;height:7px;background:var(--i-acc)}
+@keyframes blink{50%{opacity:.25}}
+@media(prefers-reduced-motion:reduce){.isl .sh .d{animation:none}}
+
+/* style token sets */
+.s-pixelArcade{--i-bg:#0e0b1e;--i-card:#171335;--i-line:#2b2560;--i-fg:#f4f0ff;--i-mute:#8d86c4;--i-acc:#ffd23f;--i-ok:#4df0a1;--i-warn:#ff6b81;--i-cyan:#5ee7ff;--i-onok:#0e0b1e;--i-ban:#2a1d3a;--i-banline:#ff6b81;--i-disp:"Silkscreen",monospace;--i-mono:"JetBrains Mono",monospace;--i-r:18px;--i-rs:6px}
+.s-phosphor{--i-bg:#0b0d0b;--i-card:#0f120f;--i-line:#1f261f;--i-fg:#d8e6d3;--i-mute:#6f8a6a;--i-acc:#b7f0a8;--i-ok:#b7f0a8;--i-warn:#e8d98a;--i-cyan:#b7f0a8;--i-onok:#0b0d0b;--i-ban:#111611;--i-banline:#2b3a2a;--i-disp:"JetBrains Mono",monospace;--i-mono:"JetBrains Mono",monospace;--i-r:16px;--i-rs:6px}
+.s-native{--i-bg:#1e1e22;--i-card:#2a2a2f;--i-line:#3a3a40;--i-fg:#f5f5f7;--i-mute:#98989f;--i-acc:#0a84ff;--i-ok:#30d158;--i-warn:#ff9f0a;--i-cyan:#64d2ff;--i-onok:#fff;--i-ban:rgba(255,159,10,.14);--i-banline:rgba(255,159,10,.4);--i-disp:"Instrument Sans",sans-serif;--i-mono:"JetBrains Mono",monospace;--i-r:20px;--i-rs:9px}
+.s-pastel{--i-bg:#f6f2fb;--i-card:#ffffff;--i-line:#e6dff2;--i-fg:#2a2440;--i-mute:#8d84a8;--i-acc:#7c5cff;--i-ok:#2fc48a;--i-warn:#ff8a5c;--i-cyan:#5b9cff;--i-onok:#fff;--i-ban:#fff4ee;--i-banline:#ffc9b0;--i-disp:"Instrument Sans",sans-serif;--i-mono:"JetBrains Mono",monospace;--i-r:22px;--i-rs:12px}
+
+/* ── Sections ── */
+section{padding:64px 0}
+.sec-head{text-align:center;max-width:640px;margin:0 auto 40px}
+.sec-head h2{font-size:clamp(26px,4vw,38px);margin-top:10px}
+.sec-head p{color:var(--dim);margin-top:12px}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:900px){.grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.grid{grid-template-columns:1fr}}
+.feat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px;transition:border-color .15s, transform .15s}
+.feat:hover{border-color:var(--line2);transform:translateY(-2px)}
+.feat .ico{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;font-size:18px;margin-bottom:14px;
+  background:rgba(168,85,247,.12);border:1px solid rgba(168,85,247,.25)}
+.feat h3{font-size:17px}
+.feat p{color:var(--dim);font-size:14px;margin:8px 0 0}
+.feat.wide{grid-column:span 2}
+@media(max-width:600px){.feat.wide{grid-column:span 1}}
+
+/* comparison */
+.vs{background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:8px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:560px}
+th,td{padding:13px 16px;text-align:left;border-bottom:1px solid var(--line)}
+th{font-family:"JetBrains Mono";font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
+td:first-child{color:var(--dim)}
+tr:last-child td{border-bottom:0}
+.yes{color:var(--live);font-weight:600}
+.no{color:var(--faint)}
+.tl-col{background:rgba(168,85,247,.06)}
+.tl-col.head{color:var(--acc2)}
+
+/* pricing */
+.price{max-width:460px;margin:0 auto;background:linear-gradient(180deg, rgba(168,85,247,.10), transparent 60%), var(--panel);
+  border:1px solid var(--line2);border-radius:22px;padding:30px;text-align:center}
+.price .tag{font-family:"Silkscreen";font-size:11px;letter-spacing:.12em;color:var(--live);text-transform:uppercase}
+.price .amount{font-family:"Chakra Petch";font-weight:700;font-size:56px;line-height:1;margin:10px 0 2px}
+.price .amount s{font-size:24px;color:var(--faint);font-weight:500;margin-right:10px}
+.price .per{color:var(--dim);font-size:14px}
+.price ul{list-style:none;padding:0;margin:22px 0;text-align:left;display:grid;gap:10px}
+.price li{display:flex;gap:10px;font-size:14.5px;color:var(--ink)}
+.price li::before{content:"▪";color:var(--acc)}
+.price .btn{width:100%;justify-content:center;margin-top:6px}
+.price .fine{font-size:12px;color:var(--faint);margin-top:14px}
+
+/* FAQ */
+.faq{max-width:720px;margin:0 auto;display:grid;gap:10px}
+details{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:0 18px}
+details[open]{border-color:var(--line2)}
+summary{list-style:none;cursor:pointer;padding:16px 0;font-family:"Chakra Petch";font-weight:600;font-size:15.5px;display:flex;justify-content:space-between;gap:12px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--acc);font-size:20px;line-height:1}
+details[open] summary::after{content:"–"}
+details p{margin:0 0 16px;color:var(--dim);font-size:14px}
+
+footer{border-top:1px solid var(--line);padding:36px 0;color:var(--faint);font-size:13px}
+.foot-in{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+.foot-links{display:flex;gap:18px}
+.foot-links a:hover{color:var(--dim)}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap nav-in">
+  <div class="brand"><span class="dot">TL</span> TokenLens</div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#compare">Compare</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <a href="#pricing" class="btn btn-primary" style="padding:9px 16px;font-size:14px">Pre-order · $15</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">macOS · notch-native</div>
+  <h1>Your AI coding agents live in the <span class="accentword">notch</span>.</h1>
+  <p class="sub">Monitor every Claude Code &amp; Codex session, approve permissions without leaving your editor, and get pinged the moment a task finishes — then see your whole AI bill in one place. All from your Mac's notch.</p>
+  <div class="cta-row">
+    <a href="#pricing" class="btn btn-primary">Pre-order for $15 ↓</a>
+    <a href="#features" class="btn btn-ghost">See what it does</a>
+  </div>
+  <div class="price-flag mono">◆ Pre-sale — $15 now, $24 at launch · 14-day free trial</div>
+  <div class="trust">
+    <span><b>100% local</b> — runs on your Mac</span>
+    <span><b>No account</b>, no sign-in</span>
+    <span><b>No telemetry</b> — nothing leaves your machine</span>
+  </div>
+
+  <div class="stage">
+    <div id="island" class="isl s-pixelArcade"></div>
+    <div class="style-pills" id="pills"></div>
+    <div class="style-note">Ten built-in styles · pick any font &amp; color · light or dark — click a style to preview</div>
+  </div>
+</div></header>
+
+<section id="features"><div class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow">One place for everything</div>
+    <h2>Two apps in one notch</h2>
+    <p>A live command center for your AI coding agents — and the only spend tracker that also watches your media-gen credits and subscriptions.</p>
+  </div>
+  <div class="grid">
+    <div class="feat"><div class="ico">👁️</div><h3>Live session monitor</h3><p>See every running Claude Code &amp; Codex session — project, model, elapsed time, tokens, cost — updating live in the notch.</p></div>
+    <div class="feat"><div class="ico">✅</div><h3>Approve from the notch</h3><p>Permission requests surface as a banner. Allow or deny with ⌘Y/⌘N — or set always-allow — without switching windows.</p></div>
+    <div class="feat"><div class="ico">🔔</div><h3>Task-complete pings</h3><p>A sound and a ✓ the instant a session finishes its turn, so you can walk away and know when to come back.</p></div>
+    <div class="feat"><div class="ico">↩︎</div><h3>Jump to terminal</h3><p>Click any session to raise the exact terminal window it runs in — Terminal, iTerm2, Warp, Ghostty, WezTerm &amp; more.</p></div>
+    <div class="feat"><div class="ico">💸</div><h3>Total AI spend</h3><p>Claude, OpenAI, Gemini and 13+ providers, plus Runway / fal / ElevenLabs credits and every subscription — one honest number.</p></div>
+    <div class="feat"><div class="ico">📊</div><h3>Real usage limits</h3><p>Your live 5-hour and weekly Claude limits from Anthropic's own numbers — with burn-rate projection before you hit the wall.</p></div>
+    <div class="feat"><div class="ico">🎨</div><h3>Make it yours</h3><p>Ten styles from 8-bit arcade to Swiss paper, any bundled font, custom accent &amp; background, and 8-bit open animations.</p></div>
+    <div class="feat"><div class="ico">🗓️</div><h3>Subscription radar</h3><p>Every AI subscription on one calendar with renewal alerts, so no trial quietly bills you at full price.</p></div>
+    <div class="feat"><div class="ico">🔌</div><h3>Local models &amp; MCP</h3><p>Track Ollama and LM Studio usage, and connect anything that speaks MCP — all on the same dashboard.</p></div>
+  </div>
+</div></section>
+
+<section id="compare" style="padding-top:20px"><div class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow">Why TokenLens</div>
+    <h2>Notch apps watch your agents. Bars watch your quota.<br>Only TokenLens does both.</h2>
+  </div>
+  <div class="vs"><table>
+    <tr><th></th><th>Notch monitors</th><th>Menu-bar trackers</th><th class="tl-col head">TokenLens</th></tr>
+    <tr><td>Live sessions in the notch</td><td class="yes">✔</td><td class="no">—</td><td class="tl-col yes">✔</td></tr>
+    <tr><td>Approve / task-complete</td><td class="yes">✔</td><td class="no">—</td><td class="tl-col yes">✔</td></tr>
+    <tr><td>Real Claude limits + burn rate</td><td class="no">partial</td><td class="yes">✔</td><td class="tl-col yes">✔</td></tr>
+    <tr><td>Total $ spend across providers</td><td class="no">—</td><td class="no">—</td><td class="tl-col yes">✔</td></tr>
+    <tr><td>Media-gen credits &amp; subscriptions</td><td class="no">—</td><td class="no">—</td><td class="tl-col yes">✔</td></tr>
+    <tr><td>Local models + MCP</td><td class="no">—</td><td class="no">—</td><td class="tl-col yes">✔</td></tr>
+    <tr><td>Fully local, no account</td><td class="no">varies</td><td class="no">varies</td><td class="tl-col yes">✔</td></tr>
+  </table></div>
+  <p style="text-align:center;color:var(--faint);font-size:12.5px;margin-top:14px">Comparison reflects common feature sets of notch monitors and menu-bar quota trackers as of 2026.</p>
+</div></section>
+
+<section id="pricing"><div class="wrap">
+  <div class="sec-head">
+    <div class="eyebrow">One-time purchase</div>
+    <h2>Own it. No subscription.</h2>
+    <p>Pre-order now during launch. The trial unlocks everything for 14 days — buy when you're convinced.</p>
+  </div>
+  <div class="price">
+    <div class="tag">◆ Launch pre-sale</div>
+    <div class="amount"><s>$24</s>$15</div>
+    <div class="per">one-time · 1 Mac · 1 year of updates</div>
+    <ul>
+      <li>Everything above, unlocked forever</li>
+      <li>1 full year of updates included</li>
+      <li>Keeps working after the update year</li>
+      <li>14-day free trial, no card required</li>
+      <li>Local &amp; private — no account ever</li>
+    </ul>
+    <a href="https://www.patreon.com/ercinio/posts/tokenlens-ai-in-167960798" class="btn btn-primary" id="buy">Pre-order on Patreon · $15</a>
+    <div class="fine">You'll get a license key by email. Paste it into Settings ▸ License. macOS 15+.</div>
+  </div>
+</div></section>
+
+<section id="faq"><div class="wrap">
+  <div class="sec-head"><div class="eyebrow">Questions</div><h2>Good to know</h2></div>
+  <div class="faq">
+    <details><summary>Does it send my data anywhere?</summary><p>No. TokenLens runs entirely on your Mac, reads your local Claude Code transcripts, and talks only to a backend bound to 127.0.0.1. No account, no sign-in, no telemetry. Your API keys and tokens are encrypted on-device.</p></details>
+    <details><summary>Which agents and terminals are supported?</summary><p>Claude Code and Codex CLI today, with more agents on the roadmap. Jump-to-terminal works with Terminal, iTerm2, Warp, Ghostty, WezTerm, kitty, Hyper, Alacritty and Tabby.</p></details>
+    <details><summary>How do approvals work?</summary><p>A tiny hook (installed by the first-run wizard, with your settings.json backed up first) forwards Claude Code permission requests to the notch. If TokenLens isn't running, your normal terminal prompt takes over — it can never block or silently allow anything.</p></details>
+    <details><summary>What does the trial include?</summary><p>Everything — for 14 days, no card. After that the app keeps running; you'll just see a gentle reminder to activate. No features are ripped out from under you.</p></details>
+    <details><summary>Can I move my license to a new Mac?</summary><p>Yes. Deactivate in Settings ▸ License on the old Mac and activate on the new one. A 1-Mac license means one Mac at a time.</p></details>
+    <details><summary>What do I get during pre-sale?</summary><p>The current build plus a full year of updates at the $15 price — the roadmap (more agents, richer styles, iOS companion) lands as free updates during that year.</p></details>
+  </div>
+</div></section>
+
+<footer><div class="wrap foot-in">
+  <div class="brand"><span class="dot">TL</span> TokenLens</div>
+  <div class="foot-links">
+    <a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+    <a href="https://www.patreon.com/ercinio/posts/tokenlens-ai-in-167960798">Buy</a>
+  </div>
+  <div>© 2026 · Made on a Mac · No account, no telemetry.</div>
+</div></footer>
+
+<script>
+const STYLES = [
+  ["pixelArcade","Pixel Arcade"],
+  ["phosphor","Phosphor"],
+  ["native","Native"],
+  ["pastel","Pastel (light)"],
+];
+const island = document.getElementById("island");
+const pills = document.getElementById("pills");
+
+function render(){
+  island.innerHTML = `
+    <div class="top"><span>TOKENLENS</span><span>♪ ⚙</span></div>
+    <div class="tabs"><span class="on">Activity</span><span>Integrations</span><span>Subs</span><span>Cost</span><span>Local</span></div>
+    <div class="ban"><span><b>Bash</b> <code>git push origin main</code></span><span class="bt"><button class="ok">Allow</button><button class="no">Deny</button></span></div>
+    <div class="card">
+      <div class="lbl"><span>Current session</span><i>33%</i></div><div class="meter"><b style="width:33%"></b></div>
+      <div class="row"><span>resets in 3h 47m</span><span>live</span></div>
+      <div class="lbl" style="margin-top:8px"><span>Weekly</span><i>7%</i></div><div class="meter w"><b style="width:7%"></b></div>
+    </div>
+    <div class="card">
+      <div class="sh"><span class="d"></span><span class="pj">token-lens</span><span class="chip">DONE</span><span class="md">Opus</span></div>
+      <div class="task">Faz T: landing page + Patreon pre-sale</div>
+      <div class="log"><div><em>Bash</em>xcodebuild -scheme TokenLens build</div><div><em>Edit</em>site/index.html</div></div>
+      <div class="ft"><span>12m</span><span>48 msg</span><span>1.2M tok</span><span>$4.81</span><span class="live">Live</span></div>
+    </div>
+    <div class="dots"><i class="on"></i><i></i><i></i><i></i><i></i></div>`;
+}
+function setStyle(id){
+  island.className = "isl s-"+id;
+  [...pills.children].forEach(p=>p.classList.toggle("on", p.dataset.id===id));
+  render();
+}
+STYLES.forEach(([id,label],i)=>{
+  const b=document.createElement("button");
+  b.className="pill"+(i===0?" on":""); b.dataset.id=id; b.textContent=label;
+  b.onclick=()=>{setStyle(id); clearInterval(timer);};
+  pills.appendChild(b);
+});
+render();
+// gentle auto-cycle until the visitor takes over
+let idx=0;
+let timer=setInterval(()=>{ idx=(idx+1)%STYLES.length; setStyle(STYLES[idx][0]); }, 3200);
+</script>
+</body>
+</html>
