@@ -191,6 +191,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--faint);font-s
     <a href="#features" class="btn btn-ghost">See what it does</a>
   </div>
   <div class="price-flag mono">◆ Pre-sale — $15 now, $24 at launch · 14-day free trial</div>
+  <div class="price-flag mono" id="version-flag" style="margin-top:10px">▲ Current version <b>0.5.2</b> · Sep 2, 2026 · signed auto-updates</div>
   <div class="trust">
     <span><b>100% local</b> — runs on your Mac</span>
     <span><b>No account</b>, no sign-in</span>
@@ -259,7 +260,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--faint);font-s
       <li>Local &amp; private — no account ever</li>
     </ul>
     <a href="https://www.patreon.com/ercinio/posts/tokenlens-ai-in-167960798" class="btn btn-primary" id="buy">Pre-order on Patreon · $15</a>
-    <div class="fine">You'll get a license key by email. Paste it into Settings ▸ License. macOS 15+.</div>
+    <div class="fine">You'll get a license key by email. Paste it into Settings ▸ License. macOS 15+. Ships as <b>v0.5.2</b> — later versions install themselves.</div>
   </div>
 </div></section>
 
@@ -267,7 +268,8 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--faint);font-s
   <div class="sec-head"><div class="eyebrow">Questions</div><h2>Good to know</h2></div>
   <div class="faq">
     <details><summary>Does it send my data anywhere?</summary><p>No. TokenLens runs entirely on your Mac, reads your local Claude Code transcripts, and talks only to a backend bound to 127.0.0.1. No account, no sign-in, no telemetry. Your API keys and tokens are encrypted on-device.</p></details>
-    <details><summary>Which agents and terminals are supported?</summary><p>Claude Code and Codex CLI today, with more agents on the roadmap. Jump-to-terminal works with Terminal, iTerm2, Warp, Ghostty, WezTerm, kitty, Hyper, Alacritty and Tabby.</p></details>
+    <details><summary>Which agents and terminals are supported?</summary><p>Claude Code and Codex CLI today, with more agents on the roadmap. Click a session and TokenLens switches to the exact tab running it in Terminal or iTerm2; Warp, Ghostty, WezTerm, kitty, Hyper, Alacritty and Tabby are brought to the front.</p></details>
+    <details><summary>What's new in the latest version?</summary><p><b>0.5.2</b> (Sep 2, 2026): click a session card and land in its exact terminal tab, matched by process and tty. Reliable from the notch, one-time "control Terminal" permission. <b>0.5.0</b> added signed auto-updates — install once, every later version arrives by itself.</p></details>
     <details><summary>How do approvals work?</summary><p>A tiny hook (installed by the first-run wizard, with your settings.json backed up first) forwards Claude Code permission requests to the notch. If TokenLens isn't running, your normal terminal prompt takes over — it can never block or silently allow anything.</p></details>
     <details><summary>What does the trial include?</summary><p>Everything — for 14 days, no card. After that the app keeps running; you'll just see a gentle reminder to activate. No features are ripped out from under you.</p></details>
     <details><summary>Can I move my license to a new Mac?</summary><p>Yes. Deactivate in Settings ▸ License on the old Mac and activate on the new one. A 1-Mac license means one Mac at a time.</p></details>
