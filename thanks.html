@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TokenLens — your license</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{--bg:#0a0b10;--bg2:#0e1017;--panel:#13151e;--line:#20232f;--line2:#2b2f3f;--ink:#ececf3;--dim:#9498ad;--faint:#5c6076;--acc:#a855f7;--acc2:#c084fc;--live:#10b981;--warn:#f59e0b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Instrument Sans",system-ui,sans-serif;line-height:1.55;padding:0 16px}
+.wrap{max-width:640px;margin:0 auto;padding-block:56px 80px}
+h1{font-family:"Chakra Petch",sans-serif;font-size:clamp(28px,5vw,40px);margin:0 0 8px;letter-spacing:-.01em}
+.sub{color:var(--dim);margin:0 0 28px}
+.mono{font-family:"JetBrains Mono",monospace}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px}
+.key{display:block;width:100%;background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:14px;font-size:13px;word-break:break-all;color:var(--ink);margin:12px 0}
+.btn{display:inline-block;border:0;border-radius:10px;padding:10px 16px;font:600 14px "Instrument Sans",sans-serif;cursor:pointer;text-decoration:none}
+.btn-primary{background:var(--acc);color:#0a0b10}.btn-primary:hover{background:var(--acc2)}
+.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line2)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+ol{padding-left:20px;color:var(--dim)}ol li{margin:6px 0}ol b{color:var(--ink)}
+.fine{color:var(--faint);font-size:13px;margin-top:18px}
+.status{color:var(--dim)}.status.err{color:var(--warn)}
+input{width:100%;background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:10px 12px;color:var(--ink);font:14px "JetBrains Mono",monospace}
+label{display:block;color:var(--dim);font-size:13px;margin:16px 0 6px}
+a{color:var(--acc2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Thanks — TokenLens is yours.</h1>
+  <p class="sub">Your license key is below and is also on its way to your email.</p>
+
+  <div class="card" id="box">
+    <div class="status" id="status">Fetching your key…</div>
+    <div id="result" hidden>
+      <code class="key mono" id="key"></code>
+      <div class="row">
+        <button class="btn btn-primary" id="copy">Copy key</button>
+        <a class="btn btn-ghost" href="https://github.com/ercinio/token-lens/releases/latest">Download TokenLens</a>
+      </div>
+      <ol>
+        <li>Open the DMG, drag TokenLens to Applications. First launch: <b>right-click ▸ Open</b>.</li>
+        <li>In TokenLens open <b>Settings ▸ License</b> and paste the key.</li>
+      </ol>
+      <div class="fine">Updates included until <span id="until"></span>; the app keeps working after. Sent to <span id="email"></span>. Homebrew: <code class="mono">brew install --cask ercinio/tokenlens/tokenlens</code></div>
+    </div>
+    <div id="manual" hidden>
+      <label for="tx">Paste the transaction id from your Paddle receipt (starts with <span class="mono">txn_</span>)</label>
+      <input id="tx" placeholder="txn_…" autocomplete="off" spellcheck="false">
+      <div class="row" style="margin-top:10px"><button class="btn btn-primary" id="go">Get my key</button></div>
+      <div class="fine">No luck? Reply to your receipt email and I'll send the key by hand.</div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  var API = "https://ercin.io/api/tokenlens-key";
+  var $ = function (id) { return document.getElementById(id); };
+  var q = new URLSearchParams(location.search);
+  var tx = q.get("_ptxn") || q.get("tx") || "";
+
+  function show(msg, err) { $("status").textContent = msg; $("status").className = "status" + (err ? " err" : ""); $("status").hidden = false; }
+  function fetchKey(id) {
+    show("Fetching your key…"); $("manual").hidden = true;
+    fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tx: id }) })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (x) {
+        if (!x.ok || !x.j.key) { show((x.j && x.j.error) || "Couldn't fetch the key.", true); $("manual").hidden = false; return; }
+        $("key").textContent = x.j.key; $("until").textContent = x.j.updates_until || ""; $("email").textContent = x.j.email || "your email";
+        $("status").hidden = true; $("result").hidden = false;
+        try { history.replaceState(null, "", location.pathname); } catch (e) {}
+      })
+      .catch(function () { show("Network error — your key is also being emailed. Try again in a moment.", true); $("manual").hidden = false; });
+  }
+  $("copy").addEventListener("click", function () {
+    var k = $("key").textContent;
+    (navigator.clipboard ? navigator.clipboard.writeText(k) : Promise.reject()).then(function () { $("copy").textContent = "Copied ✓"; }, function () { window.prompt("Copy your key:", k); });
+  });
+  $("go").addEventListener("click", function () { var v = ($("tx").value || "").trim(); if (v) fetchKey(v); });
+  if (tx) fetchKey(tx); else { show("Your key is being emailed to you. If you have your receipt, paste the transaction id below."); $("manual").hidden = false; }
+})();
+</script>
+</body>
+</html>
