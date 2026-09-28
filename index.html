@@ -394,8 +394,8 @@ footer a:hover{color:var(--ink)}
         <li>14-day free trial, no card required</li>
         <li>Local &amp; private — no account, ever</li>
       </ul>
-      <a class="btn btn-primary" href="https://www.patreon.com/ercinio/posts/tokenlens-ai-in-167960798">Pre-order on Patreon · $15</a>
-      <p class="fine">You'll get a license key by email — paste it into Settings ▸ License. macOS 15+. Ships as v0.10.3; later versions install themselves. Also on Homebrew.</p>
+      <a class="btn btn-primary" href="https://whop.com/checkout/plan_zvwg030vbK6bu/" data-buy>Buy Pagerbit · $15</a>
+      <p class="fine">Secure checkout by Whop. Your license key appears right after payment and arrives by email — paste it into Settings ▸ License. macOS 15+. Ships as v0.10.3; later versions install themselves. Also on Homebrew.</p>
     </div>
   </div>
 </section>
@@ -428,7 +428,7 @@ footer a:hover{color:var(--ink)}
   <div class="wrap">
     <a class="brand" href="#top" style="font-size:17px"><svg width="22" height="22"><use href="#mark"/></svg>pagerbit</a>
     <span>© 2026 · Made on a Mac · No account, no telemetry.</span>
-    <nav aria-label="Footer"><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="https://www.patreon.com/ercinio/posts/tokenlens-ai-in-167960798">Buy</a></nav>
+    <nav aria-label="Footer"><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="https://whop.com/checkout/plan_zvwg030vbK6bu/" data-buy>Buy</a></nav>
   </div>
 </footer>
 
@@ -450,6 +450,17 @@ footer a:hover{color:var(--ink)}
     es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { rootMargin: '0px 0px -8% 0px' }) : null;
   document.querySelectorAll('.reveal').forEach(function (el) { io ? io.observe(el) : el.classList.add('in'); });
+  // Whop checkout that returns to the thanks page; the plain link is the fallback.
+  document.querySelectorAll('[data-buy]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      var fallback = a.href;
+      fetch('https://ercin.io/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ kind: 'pagerbit' }) })
+        .then(function (r) { return r.json(); })
+        .then(function (j) { location.href = (j && j.url) || fallback; })
+        .catch(function () { location.href = fallback; });
+    });
+  });
 })();
 </script>
 </body>
