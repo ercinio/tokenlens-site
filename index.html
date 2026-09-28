@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TokenLens — AI agents in the notch</title>
+<title>Pagerbit — AI agents in the notch</title>
 <meta name="description" content="Monitor, approve, and jump back to every AI coding session from your Mac's notch — and see your whole AI bill in one place. Local, no account, no telemetry. $15 pre-sale.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -172,7 +172,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--faint);font-s
 <body>
 
 <nav><div class="wrap nav-in">
-  <div class="brand"><span class="dot">TL</span> TokenLens</div>
+  <div class="brand"><span class="dot">PB</span> Pagerbit</div>
   <div class="nav-links">
     <a href="#features">Features</a>
     <a href="#compare">Compare</a>
@@ -226,11 +226,11 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--faint);font-s
 
 <section id="compare" style="padding-top:20px"><div class="wrap">
   <div class="sec-head">
-    <div class="eyebrow">Why TokenLens</div>
-    <h2>Notch apps watch your agents. Bars watch your quota.<br>Only TokenLens does both.</h2>
+    <div class="eyebrow">Why Pagerbit</div>
+    <h2>Notch apps watch your agents. Bars watch your quota.<br>Only Pagerbit does both.</h2>
   </div>
   <div class="vs"><table>
-    <tr><th></th><th>Notch monitors</th><th>Menu-bar trackers</th><th class="tl-col head">TokenLens</th></tr>
+    <tr><th></th><th>Notch monitors</th><th>Menu-bar trackers</th><th class="tl-col head">Pagerbit</th></tr>
     <tr><td>Live sessions in the notch</td><td class="yes">✔</td><td class="no">—</td><td class="tl-col yes">✔</td></tr>
     <tr><td>Approve / task-complete</td><td class="yes">✔</td><td class="no">—</td><td class="tl-col yes">✔</td></tr>
     <tr><td>Real Claude limits + burn rate</td><td class="no">partial</td><td class="yes">✔</td><td class="tl-col yes">✔</td></tr>
@@ -267,10 +267,10 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--faint);font-s
 <section id="faq"><div class="wrap">
   <div class="sec-head"><div class="eyebrow">Questions</div><h2>Good to know</h2></div>
   <div class="faq">
-    <details><summary>Does it send my data anywhere?</summary><p>No. TokenLens runs entirely on your Mac, reads your local Claude Code transcripts, and talks only to a backend bound to 127.0.0.1. No account, no sign-in, no telemetry. Your API keys and tokens are encrypted on-device.</p></details>
-    <details><summary>Which agents and terminals are supported?</summary><p>Claude Code and Codex CLI today, with more agents on the roadmap. Click a session and TokenLens switches to the exact tab running it in Terminal or iTerm2; Warp, Ghostty, WezTerm, kitty, Hyper, Alacritty and Tabby are brought to the front.</p></details>
-    <details><summary>What's new in the latest version?</summary><p><b>0.10.0</b> (Sep 28, 2026): TokenLens is now Pagerbit — same app, license, data and update channel; local delegation lets Claude Code or Codex hand small drafts to the local models you already run, connected with one click and chosen from what you have installed, with a Delegation page that counts every draft, its model and cold starts, and prices the same tokens at cloud rates as a scenario; a rebuilt Local AI area with a cost scenario on your own assumptions; five interface languages; and a steadier dashboard and menu. <b>0.9.1</b> (Sep 13, 2026): computer use cleans up after itself — the driver daemon exits with the app however it is closed, leftovers from earlier copies are ended on launch, and quitting from the terminal is now an orderly quit. <b>0.9.0</b> (Sep 13, 2026): local models with one button — the Local page names what is installed (Ollama, LM Studio), fetches what is not, and sets capture up in one call; the local proxy is now its own launchd agent, so quitting TokenLens no longer takes local models offline or leaves a hole in the record; when nothing is being counted the page says why; proxy fixes for compressed replies and IPv6 shadowing; charts that draw themselves in, totals with a fortnight of history and a move-since-yesterday chip, a ninety-day rhythm strip, a seven-day mean on the trend, dashboard pages in the island's own type and texture, and the window opens on the display you are using. <b>0.8.0</b> (Sep 5, 2026): computer use — the agent you already run can drive macOS apps, and every GUI action passes your approval gate first, with readable approvals and a live feed of what it did; a Skills page showing every skill advertised to every prompt, what it costs you and which ones were ever used, with a bulk switch for the dead weight; a Context budget page measuring what a session weighs before you type, broken down into skills, subagents, CLAUDE.md and each MCP server's tool schemas — switch a server off and its schemas leave the prompt; sessions now show what they were carrying at hello. <b>0.7.0</b>: reply to Claude from your phone, Bark push, plan review with feedback, safe Allow-all, focus-aware surfacing, tmux/WezTerm/kitty precision, more agents, calibrated forecast, SSH Remote, Homebrew, Monthly Wrapped, display currency, iCloud settings sync.</p></details>
-    <details><summary>How do approvals work?</summary><p>A tiny hook (installed by the first-run wizard, with your settings.json backed up first) forwards Claude Code permission requests to the notch. If TokenLens isn't running, your normal terminal prompt takes over — it can never block or silently allow anything.</p></details>
+    <details><summary>Does it send my data anywhere?</summary><p>No. Pagerbit runs entirely on your Mac, reads your local Claude Code transcripts, and talks only to a backend bound to 127.0.0.1. No account, no sign-in, no telemetry. Your API keys and tokens are encrypted on-device.</p></details>
+    <details><summary>Which agents and terminals are supported?</summary><p>Claude Code and Codex CLI today, with more agents on the roadmap. Click a session and Pagerbit switches to the exact tab running it in Terminal or iTerm2; Warp, Ghostty, WezTerm, kitty, Hyper, Alacritty and Tabby are brought to the front.</p></details>
+    <details><summary>What's new in the latest version?</summary><p><b>0.10.0</b> (Sep 28, 2026): TokenLens is now Pagerbit — same app, license, data and update channel; local delegation lets Claude Code or Codex hand small drafts to the local models you already run, connected with one click and chosen from what you have installed, with a Delegation page that counts every draft, its model and cold starts, and prices the same tokens at cloud rates as a scenario; a rebuilt Local AI area with a cost scenario on your own assumptions; five interface languages; and a steadier dashboard and menu. <b>0.9.1</b> (Sep 13, 2026): computer use cleans up after itself — the driver daemon exits with the app however it is closed, leftovers from earlier copies are ended on launch, and quitting from the terminal is now an orderly quit. <b>0.9.0</b> (Sep 13, 2026): local models with one button — the Local page names what is installed (Ollama, LM Studio), fetches what is not, and sets capture up in one call; the local proxy is now its own launchd agent, so quitting Pagerbit no longer takes local models offline or leaves a hole in the record; when nothing is being counted the page says why; proxy fixes for compressed replies and IPv6 shadowing; charts that draw themselves in, totals with a fortnight of history and a move-since-yesterday chip, a ninety-day rhythm strip, a seven-day mean on the trend, dashboard pages in the island's own type and texture, and the window opens on the display you are using. <b>0.8.0</b> (Sep 5, 2026): computer use — the agent you already run can drive macOS apps, and every GUI action passes your approval gate first, with readable approvals and a live feed of what it did; a Skills page showing every skill advertised to every prompt, what it costs you and which ones were ever used, with a bulk switch for the dead weight; a Context budget page measuring what a session weighs before you type, broken down into skills, subagents, CLAUDE.md and each MCP server's tool schemas — switch a server off and its schemas leave the prompt; sessions now show what they were carrying at hello. <b>0.7.0</b>: reply to Claude from your phone, Bark push, plan review with feedback, safe Allow-all, focus-aware surfacing, tmux/WezTerm/kitty precision, more agents, calibrated forecast, SSH Remote, Homebrew, Monthly Wrapped, display currency, iCloud settings sync.</p></details>
+    <details><summary>How do approvals work?</summary><p>A tiny hook (installed by the first-run wizard, with your settings.json backed up first) forwards Claude Code permission requests to the notch. If Pagerbit isn't running, your normal terminal prompt takes over — it can never block or silently allow anything.</p></details>
     <details><summary>What does the trial include?</summary><p>Everything — for 14 days, no card. After that the app keeps running; you'll just see a gentle reminder to activate. No features are ripped out from under you.</p></details>
     <details><summary>Can I move my license to a new Mac?</summary><p>Yes. Deactivate in Settings ▸ License on the old Mac and activate on the new one. A 1-Mac license means one Mac at a time.</p></details>
     <details><summary>What do I get during pre-sale?</summary><p>The current build plus a full year of updates at the $15 price — the roadmap (more agents, richer styles, iOS companion) lands as free updates during that year.</p></details>
@@ -278,7 +278,7 @@ footer{border-top:1px solid var(--line);padding:36px 0;color:var(--faint);font-s
 </div></section>
 
 <footer><div class="wrap foot-in">
-  <div class="brand"><span class="dot">TL</span> TokenLens</div>
+  <div class="brand"><span class="dot">PB</span> Pagerbit</div>
   <div class="foot-links">
     <a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
     <a href="https://www.patreon.com/ercinio/posts/tokenlens-ai-in-167960798">Buy</a>
@@ -298,7 +298,7 @@ const pills = document.getElementById("pills");
 
 function render(){
   island.innerHTML = `
-    <div class="top"><span>TOKENLENS</span><span>♪ ⚙</span></div>
+    <div class="top"><span>PAGERBIT</span><span>♪ ⚙</span></div>
     <div class="tabs"><span class="on">Activity</span><span>Integrations</span><span>Subs</span><span>Cost</span><span>Local</span></div>
     <div class="ban"><span><b>Bash</b> <code>git push origin main</code></span><span class="bt"><button class="ok">Allow</button><button class="no">Deny</button></span></div>
     <div class="card">
