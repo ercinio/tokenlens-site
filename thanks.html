@@ -9,32 +9,38 @@
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@600&display=swap">
 <style>
-:root{--bg:#0a0b10;--bg2:#0e1017;--panel:#13151e;--line:#20232f;--line2:#2b2f3f;--ink:#ececf3;--dim:#9498ad;--faint:#5c6076;--acc:#a855f7;--acc2:#c084fc;--live:#10b981;--warn:#f59e0b}
+:root{--bg:#0b0b14;--bg2:#101019;--card:#14141f;--line:#ffffff14;--line2:#ffffff22;--ink:#f2f1f8;--dim:#a7a5bd;--faint:#6f6d86;--violet:#6d4cff;--violet2:#a18cff;--pink:#ff4fa3;--mint:#3df2b0;--amber:#ffb547;--grad:linear-gradient(95deg,#a18cff 0%,#6d4cff 40%,#ff4fa3 100%)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:"Instrument Sans",system-ui,sans-serif;line-height:1.55;padding:0 16px}
-.wrap{max-width:640px;margin:0 auto;padding-block:56px 80px}
-h1{font-family:"Chakra Petch",sans-serif;font-size:clamp(28px,5vw,40px);margin:0 0 8px;letter-spacing:-.01em}
-.sub{color:var(--dim);margin:0 0 28px}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.6 "Instrument Sans",system-ui,sans-serif;padding:0 16px;-webkit-font-smoothing:antialiased;min-height:100vh;background-image:radial-gradient(900px 520px at 50% -140px,#6d4cff38,#ff4fa314 55%,transparent 75%);background-repeat:no-repeat}
+.wrap{max-width:640px;margin:0 auto;padding-block:40px 80px}
+.brand{display:flex;align-items:center;gap:10px;font:600 20px "Space Grotesk",sans-serif;letter-spacing:-.04em;color:var(--ink);text-decoration:none;margin-bottom:56px}
+h1{font-family:Sora,sans-serif;font-weight:600;font-size:clamp(32px,5.5vw,48px);line-height:1.08;letter-spacing:-.035em;margin:0 0 12px;text-wrap:balance}
+h1 em{font-style:normal;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--dim);margin:0 0 30px;font-size:17px}
 .mono{font-family:"JetBrains Mono",monospace}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px}
-.key{display:block;width:100%;background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:14px;font-size:13px;word-break:break-all;color:var(--ink);margin:12px 0}
-.btn{display:inline-block;border:0;border-radius:10px;padding:10px 16px;font:600 14px "Instrument Sans",sans-serif;cursor:pointer;text-decoration:none}
-.btn-primary{background:var(--acc);color:#0a0b10}.btn-primary:hover{background:var(--acc2)}
-.btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line2)}
+.card{position:relative;background:linear-gradient(180deg,#191628,#0f0e19);border-radius:24px;padding:28px;box-shadow:0 40px 100px -30px #6d4cff55}
+.card::before{content:"";position:absolute;inset:0;border-radius:24px;padding:1px;background:var(--grad);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.key{display:block;width:100%;background:#07070d;border:1px solid var(--line2);border-radius:14px;padding:16px;font-size:13px;word-break:break-all;color:var(--ink);margin:14px 0 16px}
+.btn{display:inline-flex;align-items:center;border:0;border-radius:999px;padding:12px 20px;font:600 15px "Instrument Sans",sans-serif;cursor:pointer;text-decoration:none}
+.btn-primary{background:var(--grad);color:#fff;box-shadow:0 10px 30px #6d4cff55}
+.btn-ghost{background:#ffffff08;color:var(--ink);border:1px solid var(--line2)}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-ol{padding-left:20px;color:var(--dim)}ol li{margin:6px 0}ol b{color:var(--ink)}
-.fine{color:var(--faint);font-size:13px;margin-top:18px}
-.status{color:var(--dim)}.status.err{color:var(--warn)}
-input{width:100%;background:var(--bg2);border:1px solid var(--line2);border-radius:10px;padding:10px 12px;color:var(--ink);font:14px "JetBrains Mono",monospace}
-label{display:block;color:var(--dim);font-size:13px;margin:16px 0 6px}
-a{color:var(--acc2)}
+ol{padding-left:20px;color:var(--dim);margin:22px 0 0}ol li{margin:8px 0}ol b{color:var(--ink)}
+.fine{color:var(--faint);font-size:13.5px;margin-top:20px}
+.status{color:var(--dim)}.status.err{color:var(--amber)}
+input{width:100%;background:#07070d;border:1px solid var(--line2);border-radius:12px;padding:12px 14px;color:var(--ink);font:14px "JetBrains Mono",monospace}
+input:focus{outline:2px solid var(--violet2);outline-offset:2px}
+label{display:block;color:var(--dim);font-size:14px;margin:6px 0 8px}
+a{color:var(--violet2)}
+:focus-visible{outline:2px solid var(--violet2);outline-offset:3px}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <h1>Thanks — Pagerbit is yours.</h1>
+  <a class="brand" href="./"><svg width="26" height="26" viewBox="0 0 100 100" aria-hidden="true"><rect x="23" y="18" width="54" height="20" rx="10" fill="#6d4cff"/><circle cx="67" cy="28" r="4.2" fill="#3df2b0"/><path d="M34.5 46A21 21 0 0 0 65.5 46" stroke="#fff" stroke-width="9.5" stroke-linecap="round" fill="none"/><path d="M22 57.5A38 38 0 0 0 78 57.5" stroke="#fff" stroke-opacity=".6" stroke-width="9.5" stroke-linecap="round" fill="none"/></svg>pagerbit</a>
+  <h1>Thanks — <em>Pagerbit is yours.</em></h1>
   <p class="sub">Your license key is below and is also on its way to your email.</p>
 
   <div class="card" id="box">
