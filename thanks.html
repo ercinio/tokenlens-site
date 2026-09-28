@@ -41,7 +41,7 @@ a{color:var(--violet2)}
 <div class="wrap">
   <a class="brand" href="./"><svg width="26" height="26" viewBox="0 0 100 100" aria-hidden="true"><rect x="23" y="18" width="54" height="20" rx="10" fill="#6d4cff"/><circle cx="67" cy="28" r="4.2" fill="#3df2b0"/><path d="M34.5 46A21 21 0 0 0 65.5 46" stroke="#fff" stroke-width="9.5" stroke-linecap="round" fill="none"/><path d="M22 57.5A38 38 0 0 0 78 57.5" stroke="#fff" stroke-opacity=".6" stroke-width="9.5" stroke-linecap="round" fill="none"/></svg>pagerbit</a>
   <h1>Thanks — <em>Pagerbit is yours.</em></h1>
-  <p class="sub">Your license key is below and is also on its way to your email.</p>
+  <p class="sub">Your license key is on its way to your email — and you can see it right here.</p>
 
   <div class="card" id="box">
     <div class="status" id="status">Fetching your key…</div>
@@ -58,29 +58,34 @@ a{color:var(--violet2)}
       <div class="fine">Updates included until <span id="until"></span>; the app keeps working after. Sent to <span id="email"></span>. Homebrew: <code class="mono">brew install --cask ercinio/tokenlens/tokenlens</code></div>
     </div>
     <div id="manual" hidden>
-      <label for="tx">Paste the transaction id from your Paddle receipt (starts with <span class="mono">txn_</span>)</label>
-      <input id="tx" placeholder="txn_…" autocomplete="off" spellcheck="false">
-      <div class="row" style="margin-top:10px"><button class="btn btn-primary" id="go">Get my key</button></div>
-      <div class="fine">No luck? Reply to your receipt email and I'll send the key by hand.</div>
+      <label for="tx">Payment id from your Whop receipt (starts with <span class="mono">pay_</span>)</label>
+      <input id="tx" placeholder="pay_…" autocomplete="off" spellcheck="false">
+      <label for="em" style="margin-top:14px">Email you used at checkout</label>
+      <input id="em" type="email" placeholder="you@example.com" autocomplete="email">
+      <div class="row" style="margin-top:14px"><button class="btn btn-primary" id="go">Get my key</button></div>
+      <div class="fine">Your key is also emailed to you from ercin.io. No luck? Reply to that email and I'll send it by hand.</div>
     </div>
   </div>
 </div>
 <script>
 (function () {
-  var API = "https://ercin.io/api/tokenlens-key";
+  // Whop purchases: pay_… + checkout email -> /api/tokenlens-key (Whop branch). Older Paddle receipts (txn_…) keep working.
+  var API = { pay: "https://ercin.io/api/tokenlens-key", txn: "https://ercin.io/api/tokenlens-key" };
   var $ = function (id) { return document.getElementById(id); };
   var q = new URLSearchParams(location.search);
-  var tx = q.get("_ptxn") || q.get("tx") || "";
+  var found = "";
+  q.forEach(function (v) { if (!found && /^(pay|txn)_\w+$/.test(v)) found = v; });
 
   function show(msg, err) { $("status").textContent = msg; $("status").className = "status" + (err ? " err" : ""); $("status").hidden = false; }
-  function fetchKey(id) {
-    show("Fetching your key…"); $("manual").hidden = true;
-    fetch(API, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tx: id }) })
+  function fetchKey(id, email) {
+    var api = id.indexOf("txn_") === 0 ? API.txn : API.pay;
+    show("Fetching your key…");
+    fetch(api, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ tx: id, email: email }) })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (x) {
         if (!x.ok || !x.j.key) { show((x.j && x.j.error) || "Couldn't fetch the key.", true); $("manual").hidden = false; return; }
         $("key").textContent = x.j.key; $("until").textContent = x.j.updates_until || ""; $("email").textContent = x.j.email || "your email";
-        $("status").hidden = true; $("result").hidden = false;
+        $("status").hidden = true; $("manual").hidden = true; $("result").hidden = false;
         try { history.replaceState(null, "", location.pathname); } catch (e) {}
       })
       .catch(function () { show("Network error — your key is also being emailed. Try again in a moment.", true); $("manual").hidden = false; });
@@ -89,8 +94,16 @@ a{color:var(--violet2)}
     var k = $("key").textContent;
     (navigator.clipboard ? navigator.clipboard.writeText(k) : Promise.reject()).then(function () { $("copy").textContent = "Copied ✓"; }, function () { window.prompt("Copy your key:", k); });
   });
-  $("go").addEventListener("click", function () { var v = ($("tx").value || "").trim(); if (v) fetchKey(v); });
-  if (tx) fetchKey(tx); else { show("Your key is being emailed to you. If you have your receipt, paste the transaction id below."); $("manual").hidden = false; }
+  $("go").addEventListener("click", function () {
+    var id = ($("tx").value || "").trim(), email = ($("em").value || "").trim();
+    if (!id || !email) { show("Enter both the payment id and your checkout email.", true); return; }
+    fetchKey(id, email);
+  });
+  $("em").addEventListener("keydown", function (e) { if (e.key === "Enter") $("go").click(); });
+  if (found) { $("tx").value = found; show("Payment received. Enter the email you used at checkout to see your key here."); }
+  else show("Your key is on its way to your email. To see it here, paste the payment id from your Whop receipt.");
+  $("manual").hidden = false;
+  (found ? $("em") : $("tx")).focus();
 })();
 </script>
 </body>
